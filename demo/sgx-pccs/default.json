@@ -9,7 +9,7 @@
   "AdminTokenHash": "",
   "CachingFillMode": "LAZY",
   "OPENSSL_FIPS_MODE": false,
-  "LogLevel": "info",
+  "LogLevel": "debug",
   "DB_CONFIG": "sqlite",
   "sqlite": {
     "database": "database",

@@ -21,9 +21,11 @@ spec:
         caching-mode: REQ
         cluster-proxy-url: ""
     spec:
+      imagePullSecrets:
+        - name: quay-secrets
       containers:
         - name: pccs
-          image: intel/sgx-pccs:devel
+          image: quay.io/rh-ee-aimran/sgx-pccs:latest
           ports:
             - containerPort: 8042
               name: pccs-port

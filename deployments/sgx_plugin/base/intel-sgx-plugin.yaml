@@ -19,20 +19,23 @@ spec:
         app: intel-sgx-plugin
     spec:
       automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: quay-secrets
       containers:
       - name: intel-sgx-plugin
-        image: intel/intel-sgx-plugin:devel
+        image: quay.io/rh-ee-aimran/intel-sgx-plugin:latest
         securityContext:
           seLinuxOptions:
             type: "container_device_plugin_t"
           readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
+          privileged: true
           capabilities:
             drop:
             - ALL
           seccompProfile:
             type: RuntimeDefault
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         resources:
           requests:
             memory: "15Mi"

@@ -21,9 +21,11 @@ spec:
         pccs-secure-cert: 'false'
     spec:
       automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: quay-secrets
       initContainers:
       - name: platform-registration
-        image: intel/sgx-dcap-infra:devel
+        image: quay.io/rh-ee-aimran/sgx-dcap-infra:latest
         restartPolicy: Always
         workingDir: "/opt/intel/sgx-pck-id-retrieval-tool/"
         command: ['/usr/bin/dcap-registration-flow']
@@ -39,7 +41,8 @@ spec:
               name: pccs-credentials
         securityContext:
           readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
+          privileged: true
           capabilities:
             drop:
               - ALL
@@ -50,10 +53,11 @@ spec:
             sgx.intel.com/registration: 1
       containers:
       - name: tdx-qgs
-        image: intel/sgx-dcap-infra:devel
+        image: quay.io/rh-ee-aimran/sgx-dcap-infra:latest
         securityContext:
           readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
+          privileged: true
           capabilities:
             drop:
               - ALL
