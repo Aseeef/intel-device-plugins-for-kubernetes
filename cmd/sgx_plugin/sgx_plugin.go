@@ -99,15 +99,6 @@ func (dp *devicePlugin) scan() (dpapi.DeviceTree, error) {
 		devTree.AddDevice(deviceTypeProvision, devID, dpapi.NewDeviceInfoWithTopologyHints(pluginapi.Healthy, nodes, nil, nil, nil, nil, nil))
 	}
 
-	// QGS socket for TDX attestation
-	qgsSocketPath := "/var/run/tdx-qgs/qgs.socket"
-
-	for i := uint(0); i < uint(1000); i++ {
-		devID := fmt.Sprintf("%s-%d", "sgx-qgs", i)
-		mounts := []pluginapi.Mount{{HostPath: qgsSocketPath, ContainerPath: qgsSocketPath, ReadOnly: false}}
-		devTree.AddDevice("qgs", devID, dpapi.NewDeviceInfoWithTopologyHints(pluginapi.Healthy, nil, mounts, nil, nil, nil, nil))
-	}
-
 	if !dp.dcapInfraResources {
 		return devTree, nil
 	}
@@ -136,7 +127,7 @@ func (dp *devicePlugin) scan() (dpapi.DeviceTree, error) {
 				Name: "efivarfs",
 				ContainerEdits: cdispec.ContainerEdits{
 					Mounts: []*cdispec.Mount{
-						{HostPath: "/sys/firmware/efi/efivars", ContainerPath: "/run/efivars", Type: "none", Options: []string{"bind", "rw", "nosuid", "nodev", "noexec", "relatime"}},
+						{HostPath: "/sys/firmware/efi/efivars", ContainerPath: "/run/efivars", Type: "none", Options: []string{"bind", "rw", "nosuid", "nodev", "noexec", "relatime", "fscontext=system_u:object_r:efivarfs_t:s0"}},
 					},
 				},
 			},
